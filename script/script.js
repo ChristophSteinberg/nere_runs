@@ -3,9 +3,9 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 let bgMusic = new Audio("sound/bg_beat.mp3");
 bgMusic.loop = true;
-// bgMusic.play();
+bgMusic.play();
 
-const playerImages = [];
+const playerRunningImages = [];
 const lebenImage = new Image();
 const maxLeben = 3;
 const jumpSound = new Audio("sound/hui.mp3");
@@ -14,6 +14,7 @@ const hintergrund = new Image();
 const vordergrund = new Image();
 const foregroundSpeed = 2;
 const backgroundSpeed = 2;
+const showBoundingRectangle = false;
 
 lebenImage.src = "images/idle/still1.png";
 hintergrund.src = "images/background_A.png";
@@ -34,6 +35,14 @@ let isDucking = false;
 let score = 0;
 let backgroundX = 0;
 let foregroundX = 0;
+
+let lastFassSpawned = -1;
+const fassSpawnInterval = 2500;
+
+const fassImage = new Image();
+fassImage.src = "images/fass.png";
+
+let barrels = [];
 
 function zeichneVordergrund() {
   ctx.drawImage(vordergrund, foregroundX, 0, canvas.width, canvas.height);
@@ -69,39 +78,34 @@ function zeichneHintergrund() {
 
 function zeichneplayer() {
   ctx.strokeStyle = "red"; // Farbe für das Rechteck
-  ctx.strokeRect(
-    playerPositionX,
-    playerPositionY,
-    playerPositionWidth,
-    playerPositionHeight
-  ); // Zeichnet das Rechteck um den Spieler
+
+  // Zeichnet das Rechteck um den Spieler
+  if (showBoundingRectangle) {
+    ctx.strokeRect(
+      playerPositionX,
+      playerPositionY,
+      playerPositionWidth,
+      playerPositionHeight
+    );
+  }
 
   const now = Date.now();
   const deltaTime = now - lastUpdate;
   if (deltaTime > 83) {
     spriteIndex++;
-    if (spriteIndex >= playerImages.length) {
+    if (spriteIndex >= playerRunningImages.length) {
       spriteIndex = 0;
     }
     lastUpdate = now;
   }
-  if (isDucking) {
-    ctx.drawImage(
-      playerImages[spriteIndex],
-      playerPositionX,
-      playerPositionY + 70,
-      150,
-      80
-    );
-  } else {
-    ctx.drawImage(
-      playerImages[spriteIndex],
-      playerPositionX,
-      playerPositionY,
-      150,
-      150
-    );
-  }
+
+  ctx.drawImage(
+    playerRunningImages[spriteIndex],
+    playerPositionX,
+    playerPositionY,
+    playerPositionWidth,
+    playerPositionHeight
+  );
 }
 
 class Fass {
@@ -134,13 +138,17 @@ class Fass {
     );
     ctx.rotate(-this.rotation);
     ctx.translate(-this.x - this.width / 2, -this.y - this.height / 2);
-    ctx.strokeStyle = "red"; // Farbe für das Rechteck
-    ctx.strokeRect(
-      this.boundingBox.x,
-      this.boundingBox.y,
-      this.boundingBox.width,
-      this.boundingBox.height
-    ); // Zeichnet das Rechteck
+
+    // Zeichnet das Rechteck
+    if (showBoundingRectangle) {
+      ctx.strokeStyle = "red"; // Farbe für das Rechteck
+      ctx.strokeRect(
+        this.boundingBox.x,
+        this.boundingBox.y,
+        this.boundingBox.width,
+        this.boundingBox.height
+      );
+    }
   }
 
   move() {
@@ -150,11 +158,6 @@ class Fass {
     this.rotation -= 0.1;
   }
 }
-
-const fassImage = new Image();
-fassImage.src = "images/fass.png";
-
-let barrels = [];
 
 function spawnFass(x, y) {
   const duckChance = Math.random();
@@ -214,14 +217,7 @@ function zeichnebarrels() {
       score = scoredBarrels;
     }
   });
-
-  if (collisionDetected) {
-    return;
-  }
 }
-
-let lastFassSpawned = -1;
-const fassSpawnInterval = 2500;
 
 function gameLoop() {
   const now = Date.now();
@@ -258,7 +254,7 @@ function gameLoop() {
 for (let i = 1; i <= 8; i++) {
   const img = new Image();
   img.src = `images/run/run${i}.png`;
-  playerImages.push(img);
+  playerRunningImages.push(img);
 }
 
 function bewegeLinks() {
@@ -273,7 +269,7 @@ function bewegeRechts() {
   playerPositionX += 10;
 }
 
-function springe() {
+function jump() {
   if (!isJumping) {
     isJumping = true;
     playerPositionY -= 120;
@@ -286,16 +282,33 @@ function springe() {
   }
 }
 
+function duck() {
+  if (!isDucking) {
+    isDucking = true;
+    playerPositionY = playerPositionY + 75;
+    playerPositionHeight = 75;
+  }
+}
+
+// not duck and not jump
+function run() {
+  if (isDucking) {
+    playerPositionY = playerPositionY - 75;
+    playerPositionHeight = 150;
+  }
+  isDucking = false;
+}
+
 document.addEventListener("keydown", (event) => {
   if (event.key === "a") {
     isMovingLeft = true;
   } else if (event.key === "d") {
     isMovingRight = true;
   } else if (event.key === " ") {
-    springe();
+    jump();
     event.preventDefault();
   } else if (event.key === "s") {
-    isDucking = true;
+    duck();
   }
 });
 
@@ -305,7 +318,8 @@ document.addEventListener("keyup", (event) => {
   } else if (event.key === "d") {
     isMovingRight = false;
   } else if (event.key === "s") {
-    isDucking = false;
+    run();
   }
 });
+
 requestAnimationFrame(gameLoop);
