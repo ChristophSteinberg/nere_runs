@@ -3,18 +3,20 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 let bgMusic = new Audio("sound/bg_beat.mp3");
 bgMusic.loop = true;
-// bgMusic.play();
+bgMusic.play();
 
 const playerRunningImages = [];
 const lebenImage = new Image();
 const maxLeben = 3;
 const jumpSound = new Audio("sound/hui.mp3");
 const moveSound = new Audio("sound/schritt.mp3");
+const rollSound = new Audio("sound/roll.mp3");
+
 const hintergrund = new Image();
 const vordergrund = new Image();
 const foregroundSpeed = 2;
 const backgroundSpeed = 2;
-const showBoundingRectangle = true;
+const showBoundingRectangle = false;
 
 lebenImage.src = "images/idle/still1.png";
 hintergrund.src = "images/background_A.png";
@@ -37,7 +39,7 @@ let backgroundX = 0;
 let foregroundX = 0;
 
 let lastFassSpawned = -1;
-const fassSpawnInterval = 2200;
+const fassSpawnInterval = 2400;
 
 const fassImage = new Image();
 fassImage.src = "images/fass.png";
@@ -212,6 +214,7 @@ function zeichnebarrels() {
             barrel.passed = true;
             scoredBarrels++;
             score = scoredBarrels;
+
         }
     });
 }
