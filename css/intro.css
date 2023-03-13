@@ -1,0 +1,27 @@
+body {
+    overflow: hidden;
+}
+
+.my-element {
+    overflow: hidden;
+}
+
+#intro-image {
+    position: center;
+    top: 0%;
+    left: 0%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    animation: zoom-in 2s ease-out forwards;
+}
+
+@keyframes zoom-in {
+    50% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}

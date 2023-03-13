@@ -3,13 +3,17 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Spielfigur steuern</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>TK-Nere Runs</title>
+    <link rel="stylesheet" href="css/intro.css">
 </head>
 
 <body style="background-color:black;">
-    <canvas id="gameCanvas" width="1450" height="600"></canvas>
-    <script src="script/script.js"></script>
+    <img id="intro-image" src="images/nere.png" alt="Intro-Bild" />
+    <script>
+        setTimeout(function() {
+            window.location.href = "game.html";
+        }, 7000);
+    </script>
 </body>
 
 </html>

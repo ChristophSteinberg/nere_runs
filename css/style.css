@@ -1,13 +1,17 @@
+body {
+    color: white;
+    position: center;
+}
+
+h4 {
+    text-align: center;
+}
+
 canvas {
     border: 1px solid red;
 }
 
-
-/* #spielfigur {
-    width: 30px;
-    height: 30px;
-    background-image: url(images/idle/still1.png)+ i + ".png";
-    position: absolute;
-    top: 0;
-    left: 0;
-} */
+#gameCanvas {
+    display: block;
+    margin: 0 auto;
+}
