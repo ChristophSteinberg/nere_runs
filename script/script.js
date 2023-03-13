@@ -157,16 +157,25 @@ function spawnFass(x, y) {
     score++;
 }
 
-function checkCollision(obj1, obj2) {
-    const spriteLeft = obj1.x;
-    const spriteRight = obj1.x + obj1.width;
-    const spriteTop = obj1.y;
-    const spriteBottom = obj1.y + obj1.height;
+function checkCollision(playerPos, barrelPos) {
+    console.log(playerPos.x);
+    let collision = (playerPos.x < barrelPos.x + barrelPos.width &&
+        playerPos.x + playerPos.width > barrelPos.x);
+    // playerPos.y < barrelPos.y + barrelPos.height &&
+    // playerPos.height + playerPos.y > barrelPos.y);
+    if (collision) {
+        console.log("collision");
+    }
+    return collision;
+    const spriteLeft = playerPos.x;
+    const spriteRight = playerPos.x + playerPos.width;
+    const spriteTop = playerPos.y;
+    const spriteBottom = playerPos.y + playerPos.height;
 
-    const barrelLeft = obj2.x + obj2.width;
-    const barrelRight = obj2.x + obj2.width;
-    const barrelTop = obj2.y - obj2.fassHeight;
-    const barrelBottom = obj2.y + obj2.fassheight;
+    const barrelLeft = barrelPos.x + barrelPos.width;
+    const barrelRight = barrelPos.x + barrelPos.width;
+    const barrelTop = barrelPos.y - barrelPos.height;
+    const barrelBottom = barrelPos.y + barrelPos.height;
 
     return (
         spriteLeft < barrelRight &&
@@ -181,13 +190,13 @@ function zeichnebarrels() {
     barrels = barrels.filter((fass) => fass.x + fass.width > 0);
 
     let collisionDetected = false;
-    barrels.forEach((fass) => {
-        fass.move();
-        fass.draw(ctx);
-        if (fass.x + fass.width < 0) {
+    barrels.forEach((barrel) => {
+        barrel.move();
+        barrel.draw(ctx);
+        if (barrel.x + barrel.width < 0) {
             barrels.shift();
         }
-        if (checkCollision(player[0], fass.boundingBox)) {
+        if (checkCollision(player[0], barrel.boundingBox)) {
             console.log("Collision detected!");
             aktLeben--;
             if (aktLeben === 0) {
@@ -199,8 +208,8 @@ function zeichnebarrels() {
             barrels.shift();
             collisionDetected = true;
             return;
-        } else if (fass.x - positionX < 0 && !fass.passed) {
-            fass.passed = true;
+        } else if (barrel.x - positionX < 0 && !barrel.passed) {
+            barrel.passed = true;
             scoredBarrels++;
             score = scoredBarrels;
 
