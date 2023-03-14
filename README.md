@@ -6,10 +6,10 @@ Check it out here:
 <https://shiprandomizer.de/teamkrado/index.html/>
 
 ## Keys for movement: 
-    A  =  LEFT
-    D  =  RIGHT
-    S  =  DUCK
-    SPACE  =  JUMP
+    A     =  LEFT
+    D     =  RIGHT
+    S     =  DUCK
+    SPACE =  JUMP
 Jump or duck to get past the barrels.
 Try to pass as many barrels as possible, if you touch a barrel you lose 1 life out of 3.
 After 3 lost lives it's game over.
