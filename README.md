@@ -4,7 +4,7 @@
 A simple Jump and Run Game in Javascript.
 
 Check it out here:
-<https://shiprandomizer.de/teamkrado/index.html/>
+<https://shiprandomizer.de/teamkrado/index.html>
 
 ## Keys for movement: 
     A     =  LEFT
